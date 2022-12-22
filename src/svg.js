@@ -1,4 +1,4 @@
-import averageColor from "@bencevans/color-array-average";
+import { getAverageColor } from "./color";
 
 const svgNS = "http://www.w3.org/2000/svg";
 
@@ -24,13 +24,6 @@ function loadCanvasWithImage(path) {
       resolve(canvas);
     };
   });
-}
-
-/**
- * @param {Uint8ClampedArray} color
- */
-function rgbToHex(color) {
-  return color[0].toString(16) + color[1].toString(16) + color[2].toString(16);
 }
 
 /**
@@ -60,18 +53,18 @@ export async function draw(imagePath, opts = {}) {
 
     const cacheKey = JSON.stringify({ imagePath, pixelSize, x, y });
     const cache = localStorage.getItem(cacheKey);
-    if (cache) return cache;
+    // if (cache) return JSON.parse(cache);
 
     for (let px = x; px < xMax; px++) {
       for (let py = y; py < yMax; py++) {
         const color = context.getImageData(px, py, 1, 1).data;
 
-        colors.push(rgbToHex(color));
+        colors.push(color);
       }
     }
-    const color = averageColor(colors);
+    const color = getAverageColor(...colors);
 
-    localStorage.setItem(cacheKey, color);
+    // localStorage.setItem(cacheKey, JSON.stringify(color));
     return color;
   };
 
@@ -83,7 +76,8 @@ export async function draw(imagePath, opts = {}) {
     for (let y = 0; y <= canvas.height; y += pixelSize) {
       context.getImageData(x, y, 1, 1).data;
 
-      const color = getAverageColorFromPart(x, y);
+      const [red, blue, green] = getAverageColorFromPart(x, y);
+      const color = `rgb(${red}, ${blue}, ${green})`;
 
       const circle = document.createElementNS(svgNS, "circle");
 

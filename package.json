@@ -11,7 +11,5 @@
   "devDependencies": {
     "vite": "^4.0.0"
   },
-  "dependencies": {
-    "@bencevans/color-array-average": "^1.0.2"
-  }
+  "dependencies": {}
 }
