@@ -57,6 +57,8 @@ async function loadCanvasWithImage(path) {
   return canvas;
 }
 
+function getCirclePoints(x, y, pixelSize) {}
+
 /**
  * @param {string} imagePath
  * @param {{padding?: number, nbOfCirclePerWidth?: number}} opts
@@ -70,7 +72,9 @@ export async function draw(imagePath, opts = {}) {
   const context = canvas.getContext("2d");
   if (context === null) throw Error("could not get context");
 
-  const pixelSize = Math.round(canvas.width / nbOfCirclePerWidth);
+  const maxSize = canvas.width > canvas.height ? canvas.width : canvas.height;
+
+  const pixelSize = Math.round(maxSize / nbOfCirclePerWidth);
 
   /**
    * @param {number} x
@@ -82,10 +86,6 @@ export async function draw(imagePath, opts = {}) {
     const xMax = x + pixelSize;
     const yMax = y + pixelSize;
 
-    const cacheKey = JSON.stringify({ imagePath, pixelSize, x, y });
-    const cache = localStorage.getItem(cacheKey);
-    // if (cache) return JSON.parse(cache);
-
     for (let px = x; px < xMax; px++) {
       for (let py = y; py < yMax; py++) {
         const color = context.getImageData(px, py, 1, 1).data;
@@ -95,7 +95,6 @@ export async function draw(imagePath, opts = {}) {
     }
     const color = getAverageColor(...colors);
 
-    // localStorage.setItem(cacheKey, JSON.stringify(color));
     return color;
   };
 
