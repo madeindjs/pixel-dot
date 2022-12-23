@@ -18,7 +18,7 @@ const saveImage = document.getElementById("saveImage");
 
 async function refresh() {
   document.querySelector("svg")?.remove();
-  const svg = await draw("image (copy).jpeg", {
+  const svg = await draw("image2.jpeg", {
     padding: Number(paddingEl.value),
     nbOfCirclePerWidth: Number(nbOfCirclePerWidth.value),
   });
