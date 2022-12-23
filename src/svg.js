@@ -17,20 +17,14 @@ function loadImage(path) {
  * @param {number} width
  * @param {number} height
  */
-function getDimensions(width, height) {
-  const max = 1000;
+function getFitDimensions(width, height, max = 1000) {
+  const maxSize = width > height ? width : height;
 
-  return [width / 2, height / 2];
+  if (maxSize < max) return [width, height];
 
-  if (width < max || height < max) return [width, height];
+  const ratio = maxSize / max;
 
-  // if (width > height) {
-  //   const w
-
-  //   return []
-  // } else {
-  //   return []
-  // }
+  return [width * ratio, height * ratio, ratio];
 }
 
 /**
@@ -43,47 +37,24 @@ async function loadCanvasWithImage(path) {
   const imgWidth = img.naturalWidth;
   const imgHeight = img.naturalHeight;
 
+  const [canvasWidth, canvasHeight] = getFitDimensions(imgWidth, imgHeight);
+
   const canvas = document.createElement("canvas");
-  // canvas.width = imgWidth;
-  // canvas.height = imgHeight;
-
-  const [w, h] = getDimensions(imgWidth, imgHeight);
-
-  // const w = imgWidth / 2;
-  // const h = imgHeight / 2;
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
 
   const context = canvas.getContext("2d");
   if (context === null) throw Error();
 
-  canvas.width = w;
-  canvas.height = h;
-  // Draw the image
-  let containerRatio = h / w;
-  let width = img.naturalWidth;
-  let height = img.naturalHeight;
-  let imgRatio = height / width;
-
-  if (imgRatio > containerRatio) {
-    // image's height too big
-    height = width * containerRatio;
-  } else {
-    // image's width too big
-    width = height / containerRatio;
-  }
-
   let s = {
-    width: width,
-    height: height,
-    offsetX: (img.naturalWidth - width) * 0.5,
-    offsetY: (img.naturalHeight - height) * 0.5,
+    width: canvasWidth,
+    height: canvasHeight,
+    offsetX: (img.naturalWidth - canvasWidth) * 0.5,
+    offsetY: (img.naturalHeight - canvasHeight) * 0.5,
   };
-  context.drawImage(img, s.offsetX, s.offsetY, s.width, s.height, 0, 0, w, h);
-
-  // context.drawImage(img, 0, 0);
+  context.drawImage(img, s.offsetX, s.offsetY, s.width, s.height, 0, 0, canvasWidth, canvasHeight);
 
   return canvas;
-  // };
-  // });
 }
 
 /**
