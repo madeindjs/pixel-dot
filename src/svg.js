@@ -10,18 +10,17 @@ export async function draw(imagePath, opts = {}) {
   const nbOfCirclePerWidth = opts.nbOfCirclePerWidth ?? 50;
   const padding = opts.padding ?? 3;
 
-  const worker = new Worker(new URL("../drawer.worker.js", import.meta.url));
-
   const canvas = await loadCanvasWithImage(imagePath);
 
   const context = canvas.getContext("2d");
   if (context === null) throw Error("could not get context");
   const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-  worker.postMessage({ imageData, opts: { nbOfCirclePerWidth, padding } });
-
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("viewBox", `0 0 ${canvas.width} ${canvas.height}`);
+
+  const worker = new Worker(new URL("../drawer.worker.js", import.meta.url));
+  worker.postMessage({ imageData, opts: { nbOfCirclePerWidth, padding } });
 
   /**
    *
