@@ -32,7 +32,8 @@ main {
   justify-content: center;
 }
 
-svg {
+svg,
+img {
   height: 500px;
   max-height: 100%;
   max-width: 100%;

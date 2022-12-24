@@ -16,8 +16,25 @@ const filter = document.getElementById("filter");
 /** @type {HTMLButtonElement} */
 // @ts-ignore
 const saveImage = document.getElementById("saveImage");
+/** @type {HTMLInputElement} */
+// @ts-ignore
+const showOriginalImage = document.getElementById("showOriginalImage");
 
 const getSvg = () => document.querySelector("svg");
+
+showOriginalImage.onchange = () => {
+  if (!app) throw Error();
+
+  app.innerHTML = "";
+
+  if (showOriginalImage.checked) {
+    const img = new Image();
+    img.setAttribute("src", "image2.jpeg");
+    app?.appendChild(img);
+  } else {
+    refresh();
+  }
+};
 
 async function refresh() {
   getSvg()?.remove();
