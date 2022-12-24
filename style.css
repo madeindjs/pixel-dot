@@ -10,7 +10,7 @@ body {
 }
 
 .toolbar {
-  background-color: cornsilk;
+  background-color: black;
   padding: 1rem;
 
   display: flex;
@@ -20,6 +20,11 @@ body {
 
 .toolbar label {
   display: block;
+  color: antiquewhite;
+}
+
+.toolbar a {
+  color: aliceblue;
 }
 
 .toolbar label input {
