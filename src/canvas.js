@@ -13,9 +13,10 @@ function loadImage(path) {
 
 /**
  * @param {string} path
+ * @param {string | undefined} filter
  * @returns {Promise<HTMLCanvasElement>}
  */
-export async function loadCanvasWithImage(path) {
+export async function loadCanvasWithImage(path, filter = undefined) {
   const img = await loadImage(path);
 
   const imgWidth = img.naturalWidth;
@@ -29,6 +30,8 @@ export async function loadCanvasWithImage(path) {
 
   const context = canvas.getContext("2d");
   if (context === null) throw Error();
+
+  if (filter) context.filter = filter;
 
   let s = {
     width: canvasWidth,
