@@ -41,15 +41,13 @@ onmessage = (e) => {
     return color;
   };
 
-  // const svg = document.createElementNS(svgNS, "svg");
-  // svg.setAttribute("viewBox", `0 0 ${imageData.width} ${imageData.height}`);
-
   for (let x = 0; x <= imageData.width; x += pixelSize) {
     console.log("computePixelMap : %s%", Math.round((x / imageData.width) * 100));
     for (let y = 0; y <= imageData.height; y += pixelSize) {
-      // context.getImageData(x, y, 1, 1).data;
-
       const [red, blue, green] = getAverageColorFromPart(x, y);
+
+      if ([red, blue, green].every((c) => c > 250)) continue;
+
       const color = `rgb(${red}, ${blue}, ${green})`;
 
       postMessage({
@@ -60,13 +58,6 @@ onmessage = (e) => {
       });
     }
   }
-
-  // return svg;
-
-  // console.log("Message received from main script", e.data);
-  // const workerResult = `Result: ${e.data[0] * e.data[1]}`;
-  // console.log("Posting message back to main script");
-  // postMessage(workerResult);
 };
 
 /**
