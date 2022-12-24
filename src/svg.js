@@ -1,62 +1,8 @@
-import { getPixelColor } from "./canvas";
+import { loadCanvasWithImage } from "./canvas";
 import { getAverageColor } from "./color";
+import { getPixelColor } from "./image-data";
 
 const svgNS = "http://www.w3.org/2000/svg";
-
-function loadImage(path) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.setAttribute("src", path);
-
-    img.onload = () => {
-      resolve(img);
-    };
-  });
-}
-
-/**
- * @param {number} width
- * @param {number} height
- */
-function getFitDimensions(width, height, max = 1000) {
-  const maxSize = width > height ? width : height;
-
-  if (maxSize < max) return [width, height];
-
-  const ratio = maxSize / max;
-
-  return [width * ratio, height * ratio, ratio];
-}
-
-/**
- * @param {string} path
- * @returns {Promise<HTMLCanvasElement>}
- */
-async function loadCanvasWithImage(path) {
-  const img = await loadImage(path);
-
-  const imgWidth = img.naturalWidth;
-  const imgHeight = img.naturalHeight;
-
-  const [canvasWidth, canvasHeight] = getFitDimensions(imgWidth, imgHeight);
-
-  const canvas = document.createElement("canvas");
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-
-  const context = canvas.getContext("2d");
-  if (context === null) throw Error();
-
-  let s = {
-    width: canvasWidth,
-    height: canvasHeight,
-    offsetX: (img.naturalWidth - canvasWidth) * 0.5,
-    offsetY: (img.naturalHeight - canvasHeight) * 0.5,
-  };
-  context.drawImage(img, s.offsetX, s.offsetY, s.width, s.height, 0, 0, canvasWidth, canvasHeight);
-
-  return canvas;
-}
 
 /**
  * @param {string} imagePath
