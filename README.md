@@ -1,0 +1,2 @@
+- [Extracting a color palette from an image with javascript - DEV Community 👩‍💻👨‍💻](https://dev.to/producthackers/creating-a-color-palette-with-javascript-44ip)
+- [How to Apply Custom Image Filters Using HTML5 Canvas in JavaScript](https://img.ly/blog/how-to-apply-filters-in-javascript/)

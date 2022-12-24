@@ -57,7 +57,16 @@ async function loadCanvasWithImage(path) {
   return canvas;
 }
 
-function getCirclePoints(x, y, pixelSize) {}
+/**
+ * @param {ImageData} imageData
+ * @param {number} x
+ * @param {number} y
+ */
+function getPixelColor(imageData, x, y) {
+  const index = x + y * imageData.width;
+
+  return new Uint8ClampedArray(imageData.data.slice(index, index + 3));
+}
 
 /**
  * @param {string} imagePath
@@ -75,6 +84,8 @@ export async function draw(imagePath, opts = {}) {
   const maxSize = canvas.width > canvas.height ? canvas.width : canvas.height;
 
   const pixelSize = Math.round(maxSize / nbOfCirclePerWidth);
+
+  const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
   /**
    * @param {number} x
