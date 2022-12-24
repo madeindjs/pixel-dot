@@ -1,3 +1,4 @@
+import { getPixelColor } from "./canvas";
 import { getAverageColor } from "./color";
 
 const svgNS = "http://www.w3.org/2000/svg";
@@ -58,17 +59,6 @@ async function loadCanvasWithImage(path) {
 }
 
 /**
- * @param {ImageData} imageData
- * @param {number} x
- * @param {number} y
- */
-function getPixelColor(imageData, x, y) {
-  const index = x + y * imageData.width;
-
-  return new Uint8ClampedArray(imageData.data.slice(index, index + 3));
-}
-
-/**
  * @param {string} imagePath
  * @param {{padding?: number, nbOfCirclePerWidth?: number}} opts
  */
@@ -99,7 +89,7 @@ export async function draw(imagePath, opts = {}) {
 
     for (let px = x; px < xMax; px++) {
       for (let py = y; py < yMax; py++) {
-        const color = context.getImageData(px, py, 1, 1).data;
+        const color = getPixelColor(imageData, px, py);
 
         colors.push(color);
       }
