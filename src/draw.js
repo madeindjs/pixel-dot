@@ -22,6 +22,8 @@ export async function draw(imagePath, opts = {}) {
 
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("viewBox", `0 0 ${canvas.width} ${canvas.height}`);
+  svg.setAttribute("height", "100%");
+  svg.setAttribute("width", "100%");
 
   const worker = new Worker(new URL("../drawer.worker.js", import.meta.url));
   worker.postMessage({ imageData, opts: { nbOfCirclePerWidth, padding } });
