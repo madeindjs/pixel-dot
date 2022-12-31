@@ -1,24 +1,11 @@
 import { getFitDimensions } from "./geo";
 
-function loadImage(path) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.setAttribute("src", path);
-
-    img.onload = () => {
-      resolve(img);
-    };
-  });
-}
-
 /**
- * @param {string} path
+ * @param {HTMLImageElement} img
  * @param {string | undefined} filter
  * @returns {Promise<HTMLCanvasElement>}
  */
-export async function loadCanvasWithImage(path, filter = undefined) {
-  const img = await loadImage(path);
-
+export async function loadCanvasWithImage(img, filter = undefined) {
   const imgWidth = img.naturalWidth;
   const imgHeight = img.naturalHeight;
 
@@ -39,7 +26,12 @@ export async function loadCanvasWithImage(path, filter = undefined) {
     offsetX: (img.naturalWidth - canvasWidth) * 0.5,
     offsetY: (img.naturalHeight - canvasHeight) * 0.5,
   };
+
+  console.log("Loading image", s);
+
   context.drawImage(img, s.offsetX, s.offsetY, s.width, s.height, 0, 0, canvasWidth, canvasHeight);
+
+  // console.log(context);
 
   return canvas;
 }

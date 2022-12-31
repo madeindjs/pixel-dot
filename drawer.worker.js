@@ -42,7 +42,7 @@ onmessage = (e) => {
   };
 
   for (let x = 0; x <= imageData.width; x += pixelSize) {
-    console.log("computePixelMap : %s%", Math.round((x / imageData.width) * 100));
+    // console.log("computePixelMap : %s%", Math.round((x / imageData.width) * 100));
     for (let y = 0; y <= imageData.height; y += pixelSize) {
       const [red, blue, green] = getAverageColorFromPart(x, y);
 
