@@ -33,48 +33,30 @@ showOriginalImage.onchange = () => {
 
   if (showOriginalImage.checked) {
     loadImage(imageInput).then((img) => app?.appendChild(img));
-    // const img = new Image();
-    // img.setAttribute("src", "image2.jpeg");
-    // ;
   } else {
     refresh();
   }
 };
 
-// function getImageUrlInput() {
-//   return new Promise((resolve, reject) => {
-//     const images = imageInput.files;
-
-//     if (images === null) {
-//       return reject("cannot get image");
-//     }
-
-//     const reader = new FileReader();
-
-//     // reader.onload = function (e) {
-//       $("#imageThumb").attr("src", e.target.result);
-//     };
-//     reader.readAsDataURL(input.files[0]);
-//   });
-// }
-
 async function refresh() {
-  getSvg()?.remove();
-  // const images = imageInput.files;
-  // console.log(images[0]);
-  // const reader = new FileReader();
-  // const path = reader.readAsDataURL(images[0]);
+  if (!app) throw Error();
 
-  // const path = window.URL.createObjectURL(images[0]);
-  // console.log(path);
+  app.innerHTML = "";
 
-  const svg = await draw(imageInput, {
-    padding: Number(paddingEl.value),
-    nbOfCirclePerWidth: Number(nbOfCirclePerWidth.value),
-    filter: filter.value,
-  });
-  console.log(svg);
-  app?.appendChild(svg);
+  try {
+    const svg = await draw(imageInput, {
+      padding: Number(paddingEl.value),
+      nbOfCirclePerWidth: Number(nbOfCirclePerWidth.value),
+      filter: filter.value,
+    });
+    app?.appendChild(svg);
+  } catch (e) {
+    const retry = document.createElement("button");
+    retry.innerText = "Oops! Retry";
+    retry.onclick = refresh;
+
+    app?.append(retry);
+  }
 }
 
 imageInput.onchange = refresh;
