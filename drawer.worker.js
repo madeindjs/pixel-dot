@@ -41,6 +41,12 @@ onmessage = (e) => {
     return color;
   };
 
+  console.log(pixelSize);
+
+  const r = pixelSize / 2 - padding;
+
+  if (r < 1) throw Error("padding is too high");
+
   for (let x = 0; x <= imageData.width; x += pixelSize) {
     // console.log("computePixelMap : %s%", Math.round((x / imageData.width) * 100));
     for (let y = 0; y <= imageData.height; y += pixelSize) {
@@ -53,8 +59,9 @@ onmessage = (e) => {
       postMessage({
         cx: String(x + pixelSize / 2),
         cy: String(y + pixelSize / 2),
-        r: String(pixelSize / 2 - padding),
+        r: String(r),
         fill: color,
+        // progress: Math.round((x / imageData.width) * 100),
       });
     }
   }

@@ -1,3 +1,4 @@
+import { Alert } from "./src/components/alert";
 import { downloadSvg } from "./src/download";
 import { draw } from "./src/draw";
 import { loadImage } from "./src/image";
@@ -43,19 +44,24 @@ async function refresh() {
 
   app.innerHTML = "";
 
+  if (!imageInput.files?.length) {
+    app?.append(Alert("You need to upload an image"));
+    return;
+  }
+
   try {
     const svg = await draw(imageInput, {
       padding: Number(paddingEl.value),
       nbOfCirclePerWidth: Number(nbOfCirclePerWidth.value),
       filter: filter.value,
     });
-    app?.appendChild(svg);
+    app.appendChild(svg);
   } catch (e) {
     const retry = document.createElement("button");
     retry.innerText = "Oops! Retry";
     retry.onclick = refresh;
 
-    app?.append(retry);
+    app.append(retry);
   }
 }
 
