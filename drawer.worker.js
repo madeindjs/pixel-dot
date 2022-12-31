@@ -41,8 +41,6 @@ onmessage = (e) => {
     return color;
   };
 
-  console.log(pixelSize);
-
   const r = pixelSize / 2 - padding;
 
   if (r < 1) throw Error("padding is too high");
