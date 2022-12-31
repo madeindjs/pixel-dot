@@ -1,16 +1,19 @@
 import { loadCanvasWithImage } from "./canvas";
+import { loadImage } from "./image";
 
 const svgNS = "http://www.w3.org/2000/svg";
 
 /**
- * @param {string} imagePath
+ * @param {string | HTMLInputElement} imagePath
  * @param {{padding?: number, nbOfCirclePerWidth?: number, filter?: string}} opts
  */
 export async function draw(imagePath, opts = {}) {
   const nbOfCirclePerWidth = opts.nbOfCirclePerWidth ?? 50;
   const padding = opts.padding ?? 3;
 
-  const canvas = await loadCanvasWithImage(imagePath, opts.filter);
+  const img = await loadImage(imagePath);
+
+  const canvas = await loadCanvasWithImage(img, opts.filter);
 
   const context = canvas.getContext("2d");
   if (context === null) throw Error("could not get context");

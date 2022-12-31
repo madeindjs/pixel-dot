@@ -1,9 +1,14 @@
+import { Alert } from "./src/components/alert";
 import { downloadSvg } from "./src/download";
-import { draw } from "./src/svg";
+import { draw } from "./src/draw";
+import { loadImage } from "./src/image";
 import "./style.css";
 
 const app = document.getElementById("app");
 
+/** @type {HTMLInputElement} */
+// @ts-ignore
+const imageInput = document.getElementById("imageInput");
 /** @type {HTMLInputElement} */
 // @ts-ignore
 const paddingEl = document.getElementById("padding");
@@ -28,24 +33,39 @@ showOriginalImage.onchange = () => {
   app.innerHTML = "";
 
   if (showOriginalImage.checked) {
-    const img = new Image();
-    img.setAttribute("src", "image2.jpeg");
-    app?.appendChild(img);
+    loadImage(imageInput).then((img) => app?.appendChild(img));
   } else {
     refresh();
   }
 };
 
 async function refresh() {
-  getSvg()?.remove();
-  const svg = await draw("image2.jpeg", {
-    padding: Number(paddingEl.value),
-    nbOfCirclePerWidth: Number(nbOfCirclePerWidth.value),
-    filter: filter.value,
-  });
-  app?.appendChild(svg);
+  if (!app) throw Error();
+
+  app.innerHTML = "";
+
+  if (!imageInput.files?.length) {
+    app?.append(Alert("You need to upload an image"));
+    return;
+  }
+
+  try {
+    const svg = await draw(imageInput, {
+      padding: Number(paddingEl.value),
+      nbOfCirclePerWidth: Number(nbOfCirclePerWidth.value),
+      filter: filter.value,
+    });
+    app.appendChild(svg);
+  } catch (e) {
+    const retry = document.createElement("button");
+    retry.innerText = "Oops! Retry";
+    retry.onclick = refresh;
+
+    app.append(retry);
+  }
 }
 
+imageInput.onchange = refresh;
 paddingEl.onchange = refresh;
 nbOfCirclePerWidth.onchange = refresh;
 filter.onchange = refresh;

@@ -1,45 +1,24 @@
-import { getFitDimensions } from "./geo";
-
-function loadImage(path) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.setAttribute("src", path);
-
-    img.onload = () => {
-      resolve(img);
-    };
-  });
-}
-
 /**
- * @param {string} path
+ * @param {HTMLImageElement} img
  * @param {string | undefined} filter
  * @returns {Promise<HTMLCanvasElement>}
  */
-export async function loadCanvasWithImage(path, filter = undefined) {
-  const img = await loadImage(path);
-
+export async function loadCanvasWithImage(img, filter = undefined) {
   const imgWidth = img.naturalWidth;
   const imgHeight = img.naturalHeight;
 
-  const [canvasWidth, canvasHeight] = getFitDimensions(imgWidth, imgHeight);
-
   const canvas = document.createElement("canvas");
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
+  canvas.width = imgWidth;
+  canvas.height = imgHeight;
 
   const context = canvas.getContext("2d");
   if (context === null) throw Error();
 
   if (filter) context.filter = filter;
 
-  let s = {
-    width: canvasWidth,
-    height: canvasHeight,
-    offsetX: (img.naturalWidth - canvasWidth) * 0.5,
-    offsetY: (img.naturalHeight - canvasHeight) * 0.5,
-  };
-  context.drawImage(img, s.offsetX, s.offsetY, s.width, s.height, 0, 0, canvasWidth, canvasHeight);
+  console.log("Loading image", { imgWidth, imgHeight });
+
+  context.drawImage(img, 0, 0, imgWidth, imgHeight);
 
   return canvas;
 }
