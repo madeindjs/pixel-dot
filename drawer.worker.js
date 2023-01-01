@@ -40,7 +40,7 @@ onmessage = (e) => {
         colors.push(color);
       }
     }
-    const color = getAverageColor(...colors);
+    const color = getAverageColor(colors);
 
     return color;
   };
@@ -104,7 +104,7 @@ function getPixelColor(imageData, x, y) {
  *
  * @param {Uint8ClampedArray[]} colors
  */
-function getAverageColor(...colors) {
+function getAverageColor(colors) {
   const qty = colors.length;
 
   const color = [0, 1, 2]
@@ -182,7 +182,7 @@ function findBiggestColorRange(rgbValues) {
  */
 function getColorsPalette(rgbValues, nb, depth = 0) {
   if (depth >= nb - 1 || rgbValues.length === 0) {
-    return [getAverageColor(...rgbValues)];
+    return [getAverageColor(rgbValues)];
   }
 
   const componentToSortBy = findBiggestColorRange(rgbValues);
