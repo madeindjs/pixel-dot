@@ -1,3 +1,6 @@
+importScripts("./colors/average");
+importScripts("./colors/image-data");
+
 /**
  * @typedef ColorPaletteWorkerPayload
  * @property {ImageData} imageData
@@ -75,32 +78,4 @@ function getColorsPalette(rgbValues, nb, depth = 0) {
     ...getColorsPalette(rgbValues.slice(0, mid), nb, depth + 1),
     ...getColorsPalette(rgbValues.slice(mid + 1), nb, depth + 1),
   ];
-}
-
-/**
- * @param {ImageData} imageData
- */
-function extractColors(imageData) {
-  const rgbValues = [];
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    rgbValues.push(new Uint8ClampedArray([imageData.data[i], imageData.data[i + 1], imageData.data[i + 2]]));
-  }
-  return rgbValues;
-}
-
-/**
- * Average color, the right way
- * https://sighack.com/post/averaging-rgb-colors-the-right-way
- *
- * @param {Uint8ClampedArray[]} colors
- */
-function getAverageColor(colors) {
-  const qty = colors.length;
-
-  const color = [0, 1, 2]
-    // sum every pow element
-    .map((i) => colors.map((c) => Math.pow(c[i], 2)).reduce((a, b) => a + b, 0))
-    .map((c) => Math.sqrt(c / qty));
-
-  return new Uint8ClampedArray(color);
 }

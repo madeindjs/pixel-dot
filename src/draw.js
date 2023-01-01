@@ -41,7 +41,7 @@ export async function draw(imagePath, opts = {}) {
     palette = await getPalette(imageData, opts.nbColorsPalette);
   }
 
-  const worker = new Worker(new URL("../drawer.worker.js", import.meta.url));
+  const worker = new Worker(new URL("./workers/drawer.worker.js", import.meta.url));
   worker.postMessage({ imageData, opts: { nbOfCirclePerWidth, padding, palette } });
 
   /**
@@ -65,14 +65,11 @@ export async function draw(imagePath, opts = {}) {
 
 function getPalette(imageData, nbColorsPalette) {
   return new Promise((resolve, reject) => {
-    const worker = new Worker(new URL("../color-palette.worker.js", import.meta.url));
-
+    const worker = new Worker(new URL("./workers/color-palette.worker.js", import.meta.url));
     /**
-     *
      * @param {MessageEvent<{palette: Uint8ClampedArray[]}>} e
      */
     worker.onmessage = (e) => resolve(e.data.palette);
-
     worker.postMessage({ imageData, nbColorsPalette });
   });
 }

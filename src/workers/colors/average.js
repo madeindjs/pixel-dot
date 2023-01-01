@@ -4,7 +4,7 @@
  *
  * @param {Uint8ClampedArray[]} colors
  */
-export function getAverageColor(...colors) {
+function getAverageColor(colors) {
   const qty = colors.length;
 
   const color = [0, 1, 2]
