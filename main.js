@@ -1,4 +1,5 @@
 import { Alert } from "./src/components/alert";
+import { Progress } from "./src/components/progress";
 import { downloadSvg } from "./src/download";
 import { draw } from "./src/draw";
 import { loadImage } from "./src/image";
@@ -52,13 +53,21 @@ async function refresh() {
     return;
   }
 
+  const { element: progress, update: updateProgress } = Progress();
+
+  document.querySelector(".toolbar__settings")?.append(progress);
+
   try {
-    const svg = await draw(imageInput, {
-      padding: Number(paddingEl.value),
-      nbOfCirclePerWidth: Number(nbOfCirclePerWidth.value),
-      filter: filter.value,
-      nbColorsPalette: Number(paletteEl.value) || undefined,
-    });
+    const svg = await draw(
+      imageInput,
+      {
+        padding: Number(paddingEl.value),
+        nbOfCirclePerWidth: Number(nbOfCirclePerWidth.value),
+        filter: filter.value,
+        nbColorsPalette: Number(paletteEl.value) || undefined,
+      },
+      updateProgress
+    );
     app.appendChild(svg);
   } catch (e) {
     const retry = document.createElement("button");
@@ -66,6 +75,8 @@ async function refresh() {
     retry.onclick = refresh;
 
     app.append(retry);
+  } finally {
+    progress.remove();
   }
 }
 

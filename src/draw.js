@@ -14,14 +14,17 @@ const svgNS = "http://www.w3.org/2000/svg";
 /**
  * @param {string | HTMLInputElement} imagePath
  * @param {DrawOptions} opts
+ * @param {((progress: number, status: string) => void) | undefined} progressCallBack
  */
-export async function draw(imagePath, opts = {}) {
+export async function draw(imagePath, opts = {}, progressCallBack = undefined) {
   const nbOfCirclePerWidth = opts.nbOfCirclePerWidth ?? 50;
   const padding = opts.padding ?? 3;
 
+  progressCallBack?.(0, "Loading image");
+
   const img = await loadImage(imagePath);
 
-  // console.log(a);
+  progressCallBack?.(5, "Generating canvas");
 
   const canvas = await loadCanvasWithImage(img, opts.filter);
 
@@ -38,20 +41,25 @@ export async function draw(imagePath, opts = {}) {
   let palette = undefined;
 
   if (opts.nbColorsPalette) {
+    progressCallBack?.(10, "Generating color palette");
     palette = await getPalette(imageData, opts.nbColorsPalette);
   }
+
+  progressCallBack?.(50, "Drawing SVG");
 
   const worker = new Worker(new URL("./workers/drawer.worker.js", import.meta.url));
   worker.postMessage({ imageData, opts: { nbOfCirclePerWidth, padding, palette } });
 
   /**
    *
-   * @param {MessageEvent<{cx: string, cy: string, r: string, fill: string}>} e
+   * @param {MessageEvent<{cx: string, cy: string, r: string, fill: string, progress: number}>} e
    */
   worker.onmessage = (e) => {
     const circle = document.createElementNS(svgNS, "circle");
 
-    const { cx, cy, fill, r } = e.data;
+    const { cx, cy, fill, r, progress } = e.data;
+
+    progressCallBack?.(50 + (50 * progress) / 100, "Drawing SVG");
 
     circle.setAttribute("cx", cx);
     circle.setAttribute("cy", cy);

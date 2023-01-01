@@ -51,7 +51,7 @@ onmessage = (e) => {
   const colorToRgb = ([red, blue, green]) => `rgb(${red}, ${blue}, ${green})`;
 
   for (let x = 0; x <= imageData.width; x += pixelSize) {
-    // console.log("computePixelMap : %s%", Math.round((x / imageData.width) * 100));
+    // console.log("computePixelMap : %s%", );
     for (let y = 0; y <= imageData.height; y += pixelSize) {
       let color = getAverageColorFromPart(x, y);
 
@@ -66,6 +66,7 @@ onmessage = (e) => {
         cy: String(y + pixelSize / 2),
         r: String(r),
         fill: colorToRgb(color),
+        progress: Math.round((x / imageData.width) * 100),
       });
     }
   }
