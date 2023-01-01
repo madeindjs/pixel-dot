@@ -42,7 +42,18 @@ export async function draw(imagePath, opts = {}, progressCallBack = undefined) {
 
   if (opts.nbColorsPalette) {
     progressCallBack?.(10, "Generating color palette");
-    palette = await getPalette(imageData, opts.nbColorsPalette);
+
+    const cacheKey = JSON.stringify({ filter: opts.filter, nbColorsPalette: opts.nbColorsPalette, path: img.src });
+
+    const cache = localStorage.getItem(cacheKey);
+
+    if (cache) {
+      palette = JSON.parse(cache).palette;
+      console.log(palette);
+    } else {
+      palette = await getPalette(imageData, opts.nbColorsPalette);
+      localStorage.setItem(cacheKey, JSON.stringify({ palette }));
+    }
   }
 
   progressCallBack?.(50, "Drawing SVG");

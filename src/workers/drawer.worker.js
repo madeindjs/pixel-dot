@@ -48,10 +48,9 @@ onmessage = (e) => {
   /**
    * @param {Uint8ClampedArray} color
    */
-  const colorToRgb = ([red, blue, green]) => `rgb(${red}, ${blue}, ${green})`;
+  const colorToRgb = (color) => `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
 
   for (let x = 0; x <= imageData.width; x += pixelSize) {
-    // console.log("computePixelMap : %s%", );
     for (let y = 0; y <= imageData.height; y += pixelSize) {
       let color = getAverageColorFromPart(x, y);
 
