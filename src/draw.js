@@ -35,8 +35,14 @@ export async function draw(imagePath, opts = {}) {
   svg.setAttribute("height", "100%");
   svg.setAttribute("width", "100%");
 
+  let palette = undefined;
+
+  if (opts.nbColorsPalette) {
+    palette = await getPalette(imageData, opts.nbColorsPalette);
+  }
+
   const worker = new Worker(new URL("../drawer.worker.js", import.meta.url));
-  worker.postMessage({ imageData, opts: { nbOfCirclePerWidth, padding, nbColorsPalette: opts.nbColorsPalette } });
+  worker.postMessage({ imageData, opts: { nbOfCirclePerWidth, padding, palette } });
 
   /**
    *
@@ -55,4 +61,18 @@ export async function draw(imagePath, opts = {}) {
   };
 
   return svg;
+}
+
+function getPalette(imageData, nbColorsPalette) {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(new URL("../color-palette.worker.js", import.meta.url));
+
+    /**
+     *
+     * @param {MessageEvent<{palette: Uint8ClampedArray[]}>} e
+     */
+    worker.onmessage = (e) => resolve(e.data.palette);
+
+    worker.postMessage({ imageData, nbColorsPalette });
+  });
 }
