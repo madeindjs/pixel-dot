@@ -24,6 +24,9 @@ const saveImage = document.getElementById("saveImage");
 /** @type {HTMLInputElement} */
 // @ts-ignore
 const showOriginalImage = document.getElementById("showOriginalImage");
+/** @type {HTMLInputElement} */
+// @ts-ignore
+const paletteEl = document.getElementById("nbPalette");
 
 const getSvg = () => document.querySelector("svg");
 
@@ -54,6 +57,7 @@ async function refresh() {
       padding: Number(paddingEl.value),
       nbOfCirclePerWidth: Number(nbOfCirclePerWidth.value),
       filter: filter.value,
+      nbColorsPalette: Number(paletteEl.value) || undefined,
     });
     app.appendChild(svg);
   } catch (e) {
@@ -68,6 +72,7 @@ async function refresh() {
 imageInput.onchange = refresh;
 paddingEl.onchange = refresh;
 nbOfCirclePerWidth.onchange = refresh;
+paletteEl.onchange = refresh;
 filter.onchange = refresh;
 window.onload = refresh;
 saveImage.onclick = () => {

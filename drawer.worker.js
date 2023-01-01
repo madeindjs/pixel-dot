@@ -1,11 +1,7 @@
-// import { getPixelColor } from "./src/image-data";
-
-// getPixelColor();
-
 /**
  * @typedef Payload
  * @property {ImageData} imageData
- * @property {{padding: number, nbOfCirclePerWidth: number}} opts
+ * @property {{padding: number, nbOfCirclePerWidth: number, palette?: Uint8ClampedArray[]}} opts
  */
 
 /**
@@ -15,7 +11,7 @@ onmessage = (e) => {
   const imageData = e.data.imageData;
   const maxSize = imageData.width > imageData.height ? imageData.width : imageData.height;
 
-  const { nbOfCirclePerWidth, padding } = e.data.opts;
+  const { nbOfCirclePerWidth, padding, palette } = e.data.opts;
 
   const pixelSize = Math.round(maxSize / nbOfCirclePerWidth);
 
@@ -45,21 +41,27 @@ onmessage = (e) => {
 
   if (r < 1) throw Error("padding is too high");
 
+  /**
+   * @param {Uint8ClampedArray} color
+   */
+  const colorToRgb = ([red, blue, green]) => `rgb(${red}, ${blue}, ${green})`;
+
   for (let x = 0; x <= imageData.width; x += pixelSize) {
     // console.log("computePixelMap : %s%", Math.round((x / imageData.width) * 100));
     for (let y = 0; y <= imageData.height; y += pixelSize) {
-      const [red, blue, green] = getAverageColorFromPart(x, y);
+      let color = getAverageColorFromPart(x, y);
 
-      if ([red, blue, green].every((c) => c > 250)) continue;
+      if (color.every((c) => c > 250)) continue;
 
-      const color = `rgb(${red}, ${blue}, ${green})`;
+      if (palette) {
+        color = getClosestColor(color, palette);
+      }
 
       postMessage({
         cx: String(x + pixelSize / 2),
         cy: String(y + pixelSize / 2),
         r: String(r),
-        fill: color,
-        // progress: Math.round((x / imageData.width) * 100),
+        fill: colorToRgb(color),
       });
     }
   }
@@ -103,4 +105,26 @@ function getAverageColor(...colors) {
     .map((c) => Math.sqrt(c / qty));
 
   return new Uint8ClampedArray(color);
+}
+
+/**
+ * @param {Uint8ClampedArray} color
+ * @param {Uint8ClampedArray[]} palette
+ */
+function getClosestColor(color, palette) {
+  let i = 0;
+  let distance = Infinity;
+
+  const [cr, cg, cb] = color;
+
+  for (let index = 0; index < palette.length; index++) {
+    const [r, g, b] = palette[index];
+    const currentDistance = Math.sqrt(Math.pow(cr - r, 2) + Math.pow(cg - g, 2) + Math.pow(cb - b, 2));
+    if (distance > currentDistance) {
+      i = index;
+      distance = currentDistance;
+    }
+  }
+
+  return palette[i];
 }

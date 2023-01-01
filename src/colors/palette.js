@@ -1,19 +1,7 @@
-/**
- * @param {ImageData} imageData
-
- */
-function extractColors(imageData) {
-  const rgbValues = [];
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    // const rgb = ;
-    rgbValues.push(new Uint8ClampedArray([imageData.data[i], imageData.data[i + 1], imageData.data[i + 2]]));
-  }
-  return rgbValues;
-}
+import { getAverageColor } from "./average";
 
 /**
  * @param {Uint8ClampedArray[]} rgbValues
- * @returns
  */
 function findBiggestColorRange(rgbValues) {
   let rMin = Number.MAX_VALUE;
@@ -50,23 +38,12 @@ function findBiggestColorRange(rgbValues) {
 
 /**
  * @param {Uint8ClampedArray[]} rgbValues
+ * @param {number} nb
  * @param {number} depth
  */
-function quantization(rgbValues, depth) {
-  const MAX_DEPTH = 4;
-
-  if (depth === MAX_DEPTH || rgbValues.length === 0) {
-    const [r, g, b] = rgbValues.reduce(([pr, pg, pb], [r, g, b]) => {
-      return new Uint8ClampedArray([(pr += r), (pg += g), (pb += b)]);
-    }, new Uint8ClampedArray([0, 0, 0]));
-
-    return [
-      new Uint8ClampedArray([
-        Math.round(r / rgbValues.length),
-        Math.round(g / rgbValues.length),
-        Math.round(b / rgbValues.length),
-      ]),
-    ];
+export function getColorsPalette(rgbValues, nb, depth = 0) {
+  if (depth >= nb - 1 || rgbValues.length === 0) {
+    return [getAverageColor(...rgbValues)];
   }
 
   const componentToSortBy = findBiggestColorRange(rgbValues);
@@ -75,16 +52,8 @@ function quantization(rgbValues, depth) {
   });
 
   const mid = rgbValues.length / 2;
-  return [...quantization(rgbValues.slice(0, mid), depth + 1), ...quantization(rgbValues.slice(mid + 1), depth + 1)];
+  return [
+    ...getColorsPalette(rgbValues.slice(0, mid), nb, depth + 1),
+    ...getColorsPalette(rgbValues.slice(mid + 1), nb, depth + 1),
+  ];
 }
-
-console.log(
-  quantization(
-    [
-      [0, 0, 0],
-      [1, 1, 1],
-      [2, 2, 2],
-    ],
-    1
-  )
-);
