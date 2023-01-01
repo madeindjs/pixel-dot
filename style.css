@@ -1,27 +1,44 @@
+:root {
+  --colors-bg-toolbar: black;
+  --unit: 1rem;
+}
+
 body {
   margin: 0;
-
   display: grid;
   grid-template-columns: auto 1fr;
-
   height: 100vh;
-
   overflow: hidden;
 }
 
 .toolbar {
-  background-color: black;
+  background-color: var(--colors-bg-toolbar);
   padding: 1rem;
+  color: antiquewhite;
+  gap: var(--unit);
 
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+.toolbar__header h1 {
+  font-size: 2rem;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.toolbar__settings {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--unit);
   flex-wrap: wrap;
+}
+
+.toolbar__bottom {
 }
 
 .toolbar label {
   display: block;
-  color: antiquewhite;
 }
 
 .toolbar a {
@@ -47,15 +64,15 @@ img {
   max-width: 100%;
 }
 
-#saveImage {
-  position: fixed;
-  bottom: 1rem;
-  right: 1rem;
-  height: 3rem;
-  width: 3rem;
-  border-radius: 50%;
-  border: 1px solid slategrey;
-  background-color: green;
-  font-size: 1.5rem;
-  cursor: pointer;
+@media (max-width: 800px) {
+  body {
+    grid-template-columns: none;
+    grid-template-rows: auto 1fr;
+  }
+
+  .toolbar {
+    display: grid;
+    grid-template-rows: none;
+    grid-template-columns: auto 1fr auto;
+  }
 }

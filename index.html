@@ -8,37 +8,44 @@
   </head>
   <body>
     <div id="toolbar" class="toolbar">
-      <label for="imageInput">
-        Image
-        <input id="imageInput" type="file" accept="image/*" />
-      </label>
-      <label for="padding">
-        Padding
-        <input type="number" id="padding" min="0" max="100" step="1" value="3" />
-      </label>
-      <label for="padding">
-        No. of circle per width
-        <input type="number" id="nbOfCirclePerWidth" min="1" max="100" step="1" value="50" />
-      </label>
-      <label for="filter">
-        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter#brightness">CSS filter</a>
-        <input list="filtersList" type="text" id="filter" />
-        <datalist id="filtersList">
-          <option value="contrast(1.4) sepia(0.5)"></option>
-          <option value="contrast(200%)"></option>
-          <option value="grayscale(50%)"></option>
-          <option value="hue-rotate(90deg)"></option>
-          <option value="invert(75%)"></option>
-          <option value="opacity(25%)"></option>
-          <option value="saturate(30%)"></option>
-          <option value="sepia(60%)"></option>
-        </datalist>
-      </label>
-      <label for="showOriginalImage">
-        <input type="checkbox" id="showOriginalImage" />
-        Show image
-      </label>
-      <button id="saveImage" title="save image">💾</button>
+      <div class="toolbar__header">
+        <h1>Pixel dot</h1>
+      </div>
+      <div class="toolbar__settings">
+        <label for="imageInput">
+          Image
+          <input id="imageInput" type="file" accept="image/*" />
+        </label>
+        <label for="padding">
+          Padding
+          <input type="number" id="padding" min="0" max="100" step="1" value="3" />
+        </label>
+        <label for="padding">
+          No. of circle per width
+          <input type="number" id="nbOfCirclePerWidth" min="1" max="100" step="1" value="50" />
+        </label>
+        <label for="filter">
+          <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/filter#brightness">CSS filter</a>
+          <input list="filtersList" type="text" id="filter" />
+          <datalist id="filtersList">
+            <option value="contrast(1.4) sepia(0.5)"></option>
+            <option value="contrast(200%)"></option>
+            <option value="grayscale(50%)"></option>
+            <option value="hue-rotate(90deg)"></option>
+            <option value="invert(75%)"></option>
+            <option value="opacity(25%)"></option>
+            <option value="saturate(30%)"></option>
+            <option value="sepia(60%)"></option>
+          </datalist>
+        </label>
+        <label for="showOriginalImage">
+          <input type="checkbox" id="showOriginalImage" />
+          Show image
+        </label>
+      </div>
+      <div class="toolbar_bottom">
+        <button id="saveImage" title="save image">💾 Save image</button>
+      </div>
     </div>
     <main id="app"></main>
     <script type="module" src="/main.js"></script>
