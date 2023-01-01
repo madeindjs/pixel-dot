@@ -1,5 +1,4 @@
-import { extractColors, loadCanvasWithImage } from "./canvas";
-import { getColorsPalette } from "./colors/palette";
+import { loadCanvasWithImage } from "./canvas";
 import { loadImage } from "./image";
 
 const svgNS = "http://www.w3.org/2000/svg";
@@ -31,21 +30,13 @@ export async function draw(imagePath, opts = {}) {
 
   const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-  // TODO: move in worker
-  let palette = undefined;
-
-  if (opts.nbColorsPalette) {
-    const colors = extractColors(imageData);
-    palette = getColorsPalette(colors, opts.nbColorsPalette);
-  }
-
   const svg = document.createElementNS(svgNS, "svg");
   svg.setAttribute("viewBox", `0 0 ${canvas.width} ${canvas.height}`);
   svg.setAttribute("height", "100%");
   svg.setAttribute("width", "100%");
 
   const worker = new Worker(new URL("../drawer.worker.js", import.meta.url));
-  worker.postMessage({ imageData, opts: { nbOfCirclePerWidth, padding, palette } });
+  worker.postMessage({ imageData, opts: { nbOfCirclePerWidth, padding, nbColorsPalette: opts.nbColorsPalette } });
 
   /**
    *
