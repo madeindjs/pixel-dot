@@ -33,6 +33,8 @@ onmessage = (e) => {
       for (let py = y; py < yMax; py++) {
         const color = getPixelColor(imageData, px, py);
 
+        if (color[3] === 0) continue;
+
         colors.push(color);
       }
     }
@@ -54,7 +56,7 @@ onmessage = (e) => {
     for (let y = 0; y <= imageData.height; y += pixelSize) {
       let color = getAverageColorFromPart(x, y);
 
-      if (color.every((c) => c > 250)) continue;
+      if (color[3] === 0 || color.every((c) => c > 250)) continue;
 
       if (palette) {
         color = getClosestColor(color, palette);

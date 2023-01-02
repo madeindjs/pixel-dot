@@ -4,7 +4,9 @@
 function extractColors(imageData) {
   const rgbValues = [];
   for (let i = 0; i < imageData.data.length; i += 4) {
-    rgbValues.push(new Uint8ClampedArray([imageData.data[i], imageData.data[i + 1], imageData.data[i + 2]]));
+    rgbValues.push(
+      new Uint8ClampedArray([imageData.data[i], imageData.data[i + 1], imageData.data[i + 2], imageData.data[i + 3]])
+    );
   }
   return rgbValues;
 }

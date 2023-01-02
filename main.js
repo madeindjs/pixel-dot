@@ -73,6 +73,7 @@ async function refresh() {
     const retry = document.createElement("button");
     retry.innerText = "Oops! Retry";
     retry.onclick = refresh;
+    console.error(e);
 
     app.append(retry);
   } finally {

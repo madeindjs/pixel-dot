@@ -13,7 +13,8 @@ importScripts("./colors/image-data");
 onmessage = (e) => {
   const { imageData, nbColorsPalette } = e.data;
 
-  const colors = extractColors(imageData);
+  const colors = extractColors(imageData).filter((color) => color[3] !== 0);
+
   const palette = getColorsPalette(colors, nbColorsPalette);
 
   postMessage({
