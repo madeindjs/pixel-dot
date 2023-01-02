@@ -56,10 +56,17 @@ onmessage = (e) => {
     for (let y = 0; y <= imageData.height; y += pixelSize) {
       let color = getAverageColorFromPart(x, y);
 
-      if (color[3] === 0 || color.every((c) => c > 250)) {
+      const shouldDrawPalette = palette && y === 0 && x > imageData.width - palette.length * pixelSize;
+
+      if (shouldDrawPalette) {
+        const currentWidth = imageData.width - x;
+        const i = Math.floor(currentWidth / pixelSize);
+        color = palette[i];
+      } else if (color[3] === 0 || color.every((c) => c > 250)) {
         // default color
-        color = new Uint8ClampedArray([230, 240, 240]);
+        color = new Uint8ClampedArray([240, 250, 250]);
       } else if (palette) {
+        if ((palette && y === 0) || y === 1) continue;
         color = getClosestColor(color, palette);
       }
 
